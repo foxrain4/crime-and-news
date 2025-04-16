@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title></title>
+  <style>
+    .video-container {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 10px;
+    }
+    .video {
+      cursor: pointer;
+      position: relative;
+      margin: 20px auto;
+    }
+    .video img {
+      width: 100%;
+      display: block;
+    }
+    button {
+  margin: 10px;
+  padding: 8px 14px;
+  font-size: 16px;
+  cursor: pointer;
+  border-radius: 8px;
+  background-color: #444;
+  color: #fff;
+  border: none;
+}
+button:hover {
+  background-color: #666;
+}
+
+  </style>
+</head>
+<body>
+  <h1></h1>
+  <div class="video-container" id="video-grid">
+    <!-- Videos will be dynamically added here -->
+  </div>
+
+<script>
+  // Your list of YouTube video IDs
+  const videoIds = [
+    "ixGDqaFdnhg", "NKrOBkOT25o", "VT0br6pyHw8", "cZG95grO-vc",
+    "wdePOd1YO48", "sX884JKcmDg", "x7bl-MtEMic", "993wlZ6XFSs",
+    "taLlm6sTdhc", "H42zWaD4A4s", "fk5DgCwdTCw", "xVh-Cejyxs8",
+    "rtSf9ktubO0", "8mywTyAhlJM"
+  ];
+
+  const videoContainer = document.getElementById('video-grid');
+
+  function createVideoGrid(ids) {
+    videoContainer.innerHTML = '';
+    ids.forEach(id => {
+      const videoDiv = document.createElement('div');
+      videoDiv.classList.add('video');
+
+      videoDiv.onclick = function () {
+        const iframe = document.createElement('iframe');
+        iframe.setAttribute('src', `https://www.youtube.com/embed/${id}?autoplay=1`);
+        iframe.setAttribute('frameborder', '0');
+        iframe.setAttribute('allow', 'autoplay; encrypted-media; fullscreen');
+        iframe.setAttribute('allowfullscreen', '');
+        iframe.style.width = "100%";
+        iframe.style.height = "100%";
+        videoDiv.innerHTML = '';
+        videoDiv.appendChild(iframe);
+      };
+
+      const img = document.createElement('img');
+      img.setAttribute('src', `https://img.youtube.com/vi/${id}/hqdefault.jpg`);
+      img.classList.add('lazyload');
+
+
+      videoDiv.appendChild(img);
+      videoContainer.appendChild(videoDiv);
+    });
+  }
+
+  // Default: latest first
+  let currentList = [...videoIds].reverse();
+  createVideoGrid(currentList);
+
+  // Add buttons
+  const controls = document.createElement('div');
+  controls.innerHTML = `
+    <button onclick="sortByNewest()">Newest First</button>
+    <button onclick="sortByOldest()">Oldest First</button>
+    <button onclick="shuffleVideos()">Shuffle</button>
+  `;
+  document.body.insertBefore(controls, videoContainer);
+
+  // Sorting functions
+  function sortByNewest() {
+    currentList = [...videoIds].reverse();
+    createVideoGrid(currentList);
+  }
+
+  function sortByOldest() {
+    currentList = [...videoIds];
+    createVideoGrid(currentList);
+  }
+
+  function shuffleVideos() {
+    currentList = [...videoIds].sort(() => Math.random() - 0.5);
+    createVideoGrid(currentList);
+  }
+</script>
+
+</body>
+</html>
